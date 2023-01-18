@@ -1,12 +1,12 @@
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 
 use std::collections::HashMap;
 
 struct StructHelper {
-    pub value: Option<SessionsManager>,
+    pub value: Option<Arc<SessionsManager>>,
 }
 
-static ARRAY: Mutex<StructHelper> = Mutex::new(StructHelper {
+static SESSIONS: Mutex<StructHelper> = Mutex::new(StructHelper {
     value: Option::None,
 });
 
@@ -26,11 +26,11 @@ impl SessionsManager {
     }
 
     pub fn init_singleton() {
-        ARRAY.lock().unwrap().value = Option::Some(SessionsManager::new());
+        SESSIONS.lock().unwrap().value = Option::Some(Arc::new(SessionsManager::new()));
     }
 
     pub fn get_sesions_count() -> usize {
-        let mut mutex_guard = ARRAY.lock().unwrap();
+        let mut mutex_guard = SESSIONS.lock().unwrap();
 
         match &mut mutex_guard.value {
             Some(session_manager) => return session_manager.get_sessions_count(),
