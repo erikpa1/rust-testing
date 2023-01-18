@@ -1,13 +1,25 @@
 use tokio::net::{TcpListener, TcpSocket, TcpStream};
 
+use std::collections::HashMap;
+use std::hash::Hash;
 use std::io;
+use std::sync::Mutex;
+
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
 use rand::prelude::*;
 
+mod sessions;
+
+use sessions::{SessionsManager};
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
+    SessionsManager::init_singleton();
+    
+
+    println!("Sessions count: {}", SessionsManager::get_sesions_count());
+
     let address = "127.0.0.1";
     let port = "80";
 
@@ -31,7 +43,6 @@ async fn main() -> io::Result<()> {
     }
 }
 
-
 async fn handle_connection(socket: &mut TcpStream) {
     let y: u8 = rand::thread_rng().gen();
 
@@ -42,7 +53,10 @@ async fn handle_connection(socket: &mut TcpStream) {
     loop {
         println!("Reading first N");
 
-        let n = socket.read(&mut buf).await.expect("failed to read data from socket");
+        let n = socket
+            .read(&mut buf)
+            .await
+            .expect("failed to read data from socket");
 
         println!("{}", n);
 
@@ -51,12 +65,15 @@ async fn handle_connection(socket: &mut TcpStream) {
             return;
         }
 
-        buf.insert(0,y);
+        buf.insert(0, y);
 
         println!("{}, random is: ", y);
 
         loop {
-            socket.write_all(&buf[0..n + 1]).await.expect("failed to write data to socket");
+            socket
+                .write_all(&buf[0..n + 1])
+                .await
+                .expect("failed to write data to socket");
         }
     }
 }
