@@ -2,8 +2,6 @@ use std::sync::{Arc, Mutex};
 
 use std::collections::HashMap;
 
-
-use std::sync::Mutex;
 use std::collections::HashSet;
 
 // static GLOBAL_DATA: Mutex<Option<HashSet<i32>>> = Mutex::new(None);
@@ -36,6 +34,23 @@ impl SessionsManager {
         };
     }
 
+    pub fn add_sesion(&mut self, session_id: String) {
+        self.sessions.insert(
+            session_id.clone(),
+            Session {
+                id: session_id.clone(),
+            },
+        );
+    }
+
+    pub fn get_sessions_count(&self) -> usize {
+        return self.sessions.len();
+    }
+}
+
+pub struct SessionManagerInstance {}
+
+impl SessionManagerInstance {
     pub fn init_singleton() {
         SESSIONS.lock().unwrap().value = Option::Some(Arc::new(SessionsManager::new()));
     }
@@ -51,22 +66,9 @@ impl SessionsManager {
         return 0;
     }
 
-    // pub const fn new_const() -> SessionsManager {
-    //     return SessionsManager {
-    //         sessions: HashMap::new(),
-    //     };
+    // pub fn add_session(session_id: String) {
+    //     let mut session_manager = SESSIONS.lock().unwrap();
+
+    //     session_manager.value.unwrap().add_sesion(session_id);
     // }
-
-    pub fn add_sesion(&mut self, session_id: String) {
-        self.sessions.insert(
-            session_id.clone(),
-            Session {
-                id: session_id.clone(),
-            },
-        );
-    }
-
-    pub fn get_sessions_count(&self) -> usize {
-        return self.sessions.len();
-    }
 }

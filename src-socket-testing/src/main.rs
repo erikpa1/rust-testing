@@ -11,14 +11,13 @@ use rand::prelude::*;
 
 mod sessions;
 
-use sessions::{SessionsManager};
+use sessions::{SessionManagerInstance, SessionsManager};
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    SessionsManager::init_singleton();
-    
+    SessionManagerInstance::init_singleton();
 
-    println!("Sessions count: {}", SessionsManager::get_sesions_count());
+    println!("Sessions count: {}", SessionManagerInstance::get_sesions_count());
 
     let address = "127.0.0.1";
     let port = "80";
