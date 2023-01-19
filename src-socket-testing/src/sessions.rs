@@ -2,6 +2,17 @@ use std::sync::{Arc, Mutex};
 
 use std::collections::HashMap;
 
+
+use std::sync::Mutex;
+use std::collections::HashSet;
+
+// static GLOBAL_DATA: Mutex<Option<HashSet<i32>>> = Mutex::new(None);
+
+// fn main() {
+//     *GLOBAL_DATA.lock().unwrap() = Some(HashSet::from([42]));
+//     println!("V2: {:?}", GLOBAL_DATA.lock().unwrap());
+// }
+
 struct StructHelper {
     pub value: Option<Arc<SessionsManager>>,
 }
